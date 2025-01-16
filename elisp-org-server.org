@@ -1,6 +1,8 @@
 * It'd be funny to use htmx with emacs as some local server thing (not sure how well eww rolls JavaScript tho) 
 emacs in batch mode as the server? Cgi?
 https://elpa.gnu.org/packages/web-server.html
+http://eschulte.github.io/emacs-web-server/tutorials/
+http://eschulte.github.io/emacs-web-server/index.html#Top
 could roll batch mode as a recommendation, but don't have to
 org-mode browser, appending files to page and jumping to them (so you have a chronological history of your browsing), auto-rendering org files to html when clicked (no conversion necessary) + uploading of own files to be appended (images, org, html, txt)
 htmx has examples for all of the above, so it shouldn't be super difficult https://htmx.org/examples/
@@ -16,3 +18,9 @@ what I could do is throw in a named dive at the end of a generated pae (generati
 #+end_src
 apply for CEOship of htmx with this as proof of worthiness (technically I don't need it, but I might as well)
   - https://x.com/htmx_org/status/1819184271161979316?t=4PH_Qa-_vRoKjlSx5ICQIg - do this! it's a signal!
+** see [[./server.el]] for code
+** TODO webserver serving based off functions in alist
+** TODO serving org files
+** TODO adding htmx to the org files automagically
+** TODO adding a div at the end of the generated HTML for htmx to target
+
