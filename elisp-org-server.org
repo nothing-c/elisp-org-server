@@ -1,0 +1,18 @@
+* It'd be funny to use htmx with emacs as some local server thing (not sure how well eww rolls JavaScript tho) 
+emacs in batch mode as the server? Cgi?
+https://elpa.gnu.org/packages/web-server.html
+could roll batch mode as a recommendation, but don't have to
+org-mode browser, appending files to page and jumping to them (so you have a chronological history of your browsing), auto-rendering org files to html when clicked (no conversion necessary) + uploading of own files to be appended (images, org, html, txt)
+htmx has examples for all of the above, so it shouldn't be super difficult https://htmx.org/examples/
+THEN I can be the CEO of htmx
+extra feature: download whole history as single org file
+what I could do is throw in a named dive at the end of a generated pae (generating in a buffer) that is the target for all links (hx-get, hx-target, hx-swap)
+        the hard part is getting all the links fixed up, but otherwise it should be pretty smooth sailing
+#+begin_src elisp
+(fset 'macro-org-html
+   (kmacro-lambda-form [?\C-c ?\C-e ?\C-b ?h ?H] 0 "%d")) ;; kbd macro version
+
+(org-export-to-buffer 'html "*auto-org-export*" '() '() '() t) ;; make sure it just gets the body; correct! you'd then switch to the buffer, fiddle the links, add the div, and then serve it!
+#+end_src
+apply for CEOship of htmx with this as proof of worthiness (technically I don't need it, but I might as well)
+  - https://x.com/htmx_org/status/1819184271161979316?t=4PH_Qa-_vRoKjlSx5ICQIg - do this! it's a signal!
