@@ -4,6 +4,7 @@
 (defvar eos-handlers
   '(((:GET . "/foo") . eos-index)
     ((:GET . "\.org") . eos-org-file)
+    ((:GET . ".*") . eos-404)
     ))
 
 (defun eos-index (request)
@@ -29,13 +30,11 @@
     (org-export-to-buffer 'html "*auto-org-export*" '() '() '() t)
     (buffer-string)))
 
-
-;; (ws-start				; Working
-;;  (lambda (request)
-;;    (with-slots (process headers) request
-;;      (ws-response-header process 200 '("Content-type" . "text/plain"))
-;;      (process-send-string process "hello world")))
-;;  9000)
+(defun eos-404 (request)
+  "Serve a 404 page"
+  (with-slots (process headers) request
+    (ws-response-header process 200 '("Content-type" . "text/plain"))
+    (process-send-string (process request) "404. Request a .org file")))
 
 (defun eos-run ()
   "Run the elisp org server (name not final)"
