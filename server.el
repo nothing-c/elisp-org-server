@@ -20,7 +20,7 @@
     (process-send-string (process request) (eos-render-org-file (eos-get-file headers)))))
 
 (defun eos-get-file (headers)
-  "Get the name of the requested file"
+  "Get the name of the requested file from the header provided"
   "./elisp-org-server.org")		; Temporary
 
 (defun eos-render-org-file (file)
@@ -28,6 +28,8 @@
   (with-temp-buffer
     (insert-file-contents file)
     (org-export-to-buffer 'html "*auto-org-export*" '() '() '() t)
+    (goto-char (point-max))
+    (insert "<div id=\"htmx-target\"></div>")
     (buffer-string)))
 
 (defun eos-404 (request)
