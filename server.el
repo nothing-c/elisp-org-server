@@ -2,16 +2,16 @@
 (defvar eos-port 9000)			;Temporary
 
 (defvar eos-handlers
-  '(((:GET . "/foo") . eos-index)
+  '(((:GET . "/index") . eos-index)
     ((:GET . "\.org") . eos-org-file)
     ((:GET . ".*") . eos-404)
     ))
 
 (defun eos-index (request)
-  "Generate tmp index.html"
+  "Generate index.html"
   (with-slots (process headers) request
     (ws-response-header process 200 '("Content-type" . "text/html"))
-    (process-send-string (process request) "<html><head>Index</head><body><p>Hi!</p></body></html>")))
+    (process-send-string (process request) (eos-render-org-file "index.org"))))
 
 (defun eos-org-file (request)
   "Generate and serve an org-mode file"

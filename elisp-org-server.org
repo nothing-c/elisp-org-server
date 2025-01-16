@@ -20,7 +20,8 @@ apply for CEOship of htmx with this as proof of worthiness (technically I don't 
   - https://x.com/htmx_org/status/1819184271161979316?t=4PH_Qa-_vRoKjlSx5ICQIg - do this! it's a signal!
 ** see [[./server.el]] for code
 ** DONE webserver serving based off functions in alist
-** TODO serving org files
-** TODO adding htmx to the org files automagically
+** DONE serving org files
 ** TODO adding a div at the end of the generated HTML for htmx to target
+<div id="htmx-target"></div>
+** TODO adding htmx to the org files automagically
 
