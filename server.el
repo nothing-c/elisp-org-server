@@ -35,7 +35,7 @@
 (defun eos-404 (request)
   "Serve a 404 page"
   (with-slots (process headers) request
-    (ws-response-header process 200 '("Content-type" . "text/plain"))
+    (ws-response-header process 404 '("Content-type" . "text/plain"))
     (process-send-string (process request) "404. Request a .org file")))
 
 (defun eos-run ()
