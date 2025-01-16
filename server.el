@@ -8,7 +8,7 @@
 (defun eos-index (request)
   "Generate tmp index.html"
   (with-slots (process headers) request
-    (ws-response-header process 200 '("Content-type" . "text/plain"))
+    (ws-response-header process 200 '("Content-type" . "text/html"))
     (process-send-string (process request) "<html><head>Index</head><body><p>Hi!</p></body></html>")))
 
 
@@ -22,3 +22,5 @@
 (defun eos-run ()
   "Run the elisp org server (name not final)"
   (ws-start eos-handlers eos-port))
+
+(eos-run)
