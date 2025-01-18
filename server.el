@@ -1,19 +1,8 @@
 (require 'web-server)
-(defvar eos-port 9000)			;Temporary
-(defvar eos-home-dir "c:/Users/lightning/Documents/projects/elisp-org-server/")
+(defvar eos-port 9000)
+(defvar eos-home-dir "")
 (setq org-html-link-org-files-as-html '())
-
-(defun eos-htmxify-org-buffer ()
-  "Transform regular links to all .org files in the buffer to HTMX replacement ones"
-  (if (eq '() (search-forward-regexp "href=\".*\.org\"" '() t))
-      '()				; Recursive definition because why not
-      (progn
-	(search-backward "=" '() t)
-	(backward-kill-word 1)
-	(insert "hx-get")
-	(search-forward "\"" '() t 2)
-	(insert " hx-target=\"#htmx-target\" hx-swap=\"outerHTML\" hx-trigger=\"click\"")
-	(eos-htmxify-org-buffer))))
+(defvar eos-index-file "")
 
 (defvar eos-handlers
   '(((:GET . "/index") . eos-index)
@@ -29,8 +18,14 @@
 			 (concat
 			  "<!DOCTYPE html>"
 			  "<script src=\"https://unpkg.com/htmx.org@2.0.4\" integrity=\"sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+\" crossorigin=\"anonymous\"></script>"
-			  (eos-render-org-file "index.org")
+			  (eos-render-org-file eos-index-file)
 			  "</html>"))))
+
+(defun eos-404 (request)
+  "Serve a 404 page"
+  (with-slots (process headers) request
+    (ws-response-header process 404 '("Content-type" . "text/plain"))
+    (process-send-string (process request) "404. Request a file on the machine")))
 
 (defun eos-other-file (request)
   "Deal with non-org files"
@@ -74,15 +69,20 @@
 	(eos-htmxify-org-buffer)
 	(buffer-string)))
 
-(defun eos-404 (request)
-  "Serve a 404 page"
-  (with-slots (process headers) request
-    (ws-response-header process 404 '("Content-type" . "text/plain"))
-    (process-send-string (process request) "404. Request a file on the machine")))
+(defun eos-htmxify-org-buffer ()
+  "Transform regular links to all .org files in the buffer to HTMX replacement ones"
+  (if (eq '() (search-forward-regexp "href=\".*\.org\"" '() t))
+      '()				; Recursive definition because why not
+      (progn
+	(search-backward "=" '() t)
+	(backward-kill-word 1)
+	(insert "hx-get")
+	(search-forward "\"" '() t 2)
+	(insert " hx-target=\"#htmx-target\" hx-swap=\"outerHTML\" hx-trigger=\"click\"")
+	(eos-htmxify-org-buffer))))
 
 (defun eos-run ()
   "Run the elisp org server (name not final)"
   (cd eos-home-dir)
   (ws-start eos-handlers eos-port))
 
-(eos-run)
