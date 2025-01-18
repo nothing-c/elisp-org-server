@@ -1,3 +1,5 @@
 #+TITLE: Index (example)
 * Files Available
 - [[./elisp-org-server.org]]
+
+[[./Kobayashi_Holding_GNU_Emacs_Book.png]]
