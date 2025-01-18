@@ -82,7 +82,7 @@
 	(eos-htmxify-org-buffer))))
 
 (defun eos-run ()
-  "Run the elisp org server (name not final)"
+  "Run the elisp org server"
   (cd eos-home-dir)
   (ws-start eos-handlers eos-port))
 
