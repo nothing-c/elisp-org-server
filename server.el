@@ -18,7 +18,7 @@
 (defvar eos-handlers
   '(((:GET . "/index") . eos-index)
     ((:GET . "\.org") . eos-org-file)
-    ((:GET . ".*") . eos-404)
+    ((:GET . ".*") . eos-other-file)
     ))
 
 (defun eos-index (request)
@@ -31,6 +31,21 @@
 			  "<script src=\"https://unpkg.com/htmx.org@2.0.4\" integrity=\"sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+\" crossorigin=\"anonymous\"></script>"
 			  (eos-render-org-file "index.org")
 			  "</html>"))))
+
+(defun eos-other-file (request)
+  "Deal with non-org files"
+  (with-slots (process headers) request
+    (let ((file (eos-get-file headers))
+	  (coding-system-for-read 'no-conversion))
+      (if (file-exists-p file)
+	  (progn
+	        (ws-response-header process 200 '("Content-type" . "application/octet-stream")) ; Don't care what it is
+		(process-send-string (process request)
+				     (with-temp-buffer
+				       (insert-file-contents-literally file)
+				       (buffer-string))))
+	(eos-404 request)))))
+
 
 (defun eos-org-file (request)
   "Generate and serve an org-mode file"
