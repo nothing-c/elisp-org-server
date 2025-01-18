@@ -1,9 +1,11 @@
 (require 'web-server)
 (defvar eos-port 9000)			;Temporary
+(defvar eos-home-dir "c:/Users/lightning/Documents/projects/elisp-org-server/")
+(setq org-html-link-org-files-as-html '())
 
 (defvar eos-handlers
   '(((:GET . "/index") . eos-index)
-    ((:GET . "\.org") . eos-org-file)	; This needs to change & I need to handle 404-ing from inside eos-org-file
+    ((:GET . "\.org") . eos-org-file)
     ((:GET . ".*") . eos-404)
     ))
 
@@ -22,6 +24,7 @@
   "Generate and serve an org-mode file"
   (with-slots (process headers) request
     (let ((file (eos-get-file headers)))
+      (message file)
       (if (file-exists-p file)
 	  (progn
 	    (ws-response-header process 200 '("Content-type" . "text/html"))
@@ -49,6 +52,7 @@
 
 (defun eos-run ()
   "Run the elisp org server (name not final)"
+  (cd eos-home-dir)
   (ws-start eos-handlers eos-port))
 
 (eos-run)
