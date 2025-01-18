@@ -3,7 +3,7 @@
 
 (defvar eos-handlers
   '(((:GET . "/index") . eos-index)
-    ((:GET . "\.org") . eos-org-file)
+    ((:GET . "\.org") . eos-org-file)	; This needs to change & I need to handle 404-ing from inside eos-org-file
     ((:GET . ".*") . eos-404)
     ))
 
@@ -11,7 +11,12 @@
   "Generate index.html"
   (with-slots (process headers) request
     (ws-response-header process 200 '("Content-type" . "text/html"))
-    (process-send-string (process request) (eos-render-org-file "index.org"))))
+    (process-send-string (process request)
+			 (concat
+			  "<!DOCTYPE html>"
+			  "<script src=\"https://unpkg.com/htmx.org@2.0.4\" integrity=\"sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+\" crossorigin=\"anonymous\"></script>"
+			  (eos-render-org-file "index.org")
+			  "</html>"))))
 
 (defun eos-org-file (request)
   "Generate and serve an org-mode file"
@@ -21,7 +26,7 @@
 
 (defun eos-get-file (headers)
   "Get the name of the requested file from the header provided"
-  "./elisp-org-server.org")		; Temporary
+  (cdr (assoc :GET headers)))		; Temporary
 
 (defun eos-render-org-file (file)
   "Render an org file into a string of HTML"
