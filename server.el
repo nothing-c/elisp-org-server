@@ -3,6 +3,18 @@
 (defvar eos-home-dir "c:/Users/lightning/Documents/projects/elisp-org-server/")
 (setq org-html-link-org-files-as-html '())
 
+(defun eos-htmxify-org-buffer ()
+  "Transform regular links to all .org files in the buffer to HTMX replacement ones"
+  (if (eq '() (search-forward-regexp "href=\".*\.org\"" '() t))
+      '()				; Recursive definition because why not
+      (progn
+	(search-backward "=" '() t)
+	(backward-kill-word 1)
+	(insert "hx-get")
+	(search-forward "\"" '() t 2)
+	(insert " hx-target=\"#htmx-target\" hx-swap=\"outerHTML\" hx-trigger=\"click\"")
+	(eos-htmxify-org-buffer))))
+
 (defvar eos-handlers
   '(((:GET . "/index") . eos-index)
     ((:GET . "\.org") . eos-org-file)
@@ -36,7 +48,6 @@
   (let ((rawname (cdr (assoc :GET headers))))
     (replace-regexp-in-string "^/" "" rawname)))
 
-
 (defun eos-render-org-file (file)
   "Render an org file into a string of HTML"
       (with-temp-buffer
@@ -44,6 +55,8 @@
 	(org-export-to-buffer 'html "*auto-org-export*" '() '() '() t)
 	(goto-char (point-max))
 	(insert "<div id=\"htmx-target\"></div>")
+	(goto-char (point-min))
+	(eos-htmxify-org-buffer)
 	(buffer-string)))
 
 (defun eos-404 (request)
