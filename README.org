@@ -1,0 +1,46 @@
+#+TITLE: Elisp Org Server
+* Overview
+A method to have all the crosslinks you open while reviewing org-mode files displayed in a single scrollable page, via [[https://htmx.org/][HTMX]]
+** How To Use It
+Download the Emacs Lisp [[https://elpa.gnu.org/packages/web-server.html][webserver]] via ELPA, using M-x package-install or similar.
+
+Set the variables ~eos-home-dir~ to the directory from which you want to run the server and ~eos-index-file~ as the file you want to use as the default server page, then run ~(eos-run)~ using M-: or similar.
+
+You can also use [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Batch-Mode.html][Emacs in batch mode]] to run it without having to wrangle output buffers.
+** Possible Pain Points
+- .org links aren't highlighted like regular ~<a>~ links. Doesn't bother me (ex-Acme user), but it might bother you.
+
+- I haven't put in a way to automatically insert the contents of any other textfile or HTML file.
+
+* Scratchpad 
+It'd be funny to use htmx with emacs as some local server thing (not sure how well eww rolls JavaScript tho)
+emacs in batch mode as the server? Cgi?
+https://elpa.gnu.org/packages/web-server.html
+http://eschulte.github.io/emacs-web-server/tutorials/
+http://eschulte.github.io/emacs-web-server/index.html#Top
+could roll batch mode as a recommendation, but don't have to
+org-mode browser, appending files to page and jumping to them (so you have a chronological history of your browsing), auto-rendering org files to html when clicked (no conversion necessary) + uploading of own files to be appended (images, org, html, txt)
+htmx has examples for all of the above, so it shouldn't be super difficult https://htmx.org/examples/
+extra feature: download whole history as single org file
+what I could do is throw in a named dive at the end of a generated pae (generating in a buffer) that is the target for all links (hx-get, hx-target, hx-swap)
+        the hard part is getting all the links fixed up, but otherwise it should be pretty smooth sailing
+#+begin_src elisp
+(fset 'macro-org-html
+   (kmacro-lambda-form [?\C-c ?\C-e ?\C-b ?h ?H] 0 "%d")) ;; kbd macro version
+
+(org-export-to-buffer 'html "*auto-org-export*" '() '() '() t) ;; make sure it just gets the body; correct! you'd then switch to the buffer, fiddle the links, add the div, and then serve it!
+#+end_src
+** see [[./server.el]] for code
+** DONE webserver serving based off functions in alist
+** DONE serving org files
+** DONE adding a div at the end of the generated HTML for htmx to target
+<div id="htmx-target"></div>
+** DONE adding htmx to the org files automagically
+hx-get="the original link" hx-target="htmx-target" hx-swap="outerHTML"
+        swap the href in the <a> for hx-get and give it a whirl
+and adding the CDN link (for now)
+#+begin_src html
+<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+#+end_src
+** DONE make the html output decent
+right now it's just dumping the body
