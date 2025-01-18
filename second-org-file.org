@@ -1,0 +1,2 @@
+#+TITLE: Another org file
+* Hi there!
