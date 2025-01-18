@@ -33,7 +33,9 @@
 
 (defun eos-get-file (headers)
   "Get the name of the requested file from the header provided"
-  (cdr (assoc :GET headers)))		; Temporary
+  (let ((rawname (cdr (assoc :GET headers))))
+    (replace-regexp-in-string "^/" "" rawname)))
+
 
 (defun eos-render-org-file (file)
   "Render an org file into a string of HTML"
