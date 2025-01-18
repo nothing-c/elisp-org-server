@@ -21,14 +21,14 @@ apply for CEOship of htmx with this as proof of worthiness (technically I don't 
 ** see [[./server.el]] for code
 ** DONE webserver serving based off functions in alist
 ** DONE serving org files
-** TODO adding a div at the end of the generated HTML for htmx to target
+** DONE adding a div at the end of the generated HTML for htmx to target
 <div id="htmx-target"></div>
-** TODO adding htmx to the org files automagically
+** DONE adding htmx to the org files automagically
 hx-get="the original link" hx-target="htmx-target" hx-swap="outerHTML"
         swap the href in the <a> for hx-get and give it a whirl
 and adding the CDN link (for now)
 #+begin_src html
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 #+end_src
-** TODO make the html output decent
+** DONE make the html output decent
 right now it's just dumping the body
