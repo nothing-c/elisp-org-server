@@ -21,8 +21,12 @@
 (defun eos-org-file (request)
   "Generate and serve an org-mode file"
   (with-slots (process headers) request
-    (ws-response-header process 200 '("Content-type" . "text/html"))
-    (process-send-string (process request) (eos-render-org-file (eos-get-file headers)))))
+    (let ((file (eos-get-file headers)))
+      (if (file-exists-p file)
+	  (progn
+	    (ws-response-header process 200 '("Content-type" . "text/html"))
+	    (process-send-string (process request) (eos-render-org-file file)))
+	(eos-404 request)))))
 
 (defun eos-get-file (headers)
   "Get the name of the requested file from the header provided"
@@ -30,18 +34,18 @@
 
 (defun eos-render-org-file (file)
   "Render an org file into a string of HTML"
-  (with-temp-buffer
-    (insert-file-contents file)
-    (org-export-to-buffer 'html "*auto-org-export*" '() '() '() t)
-    (goto-char (point-max))
-    (insert "<div id=\"htmx-target\"></div>")
-    (buffer-string)))
+      (with-temp-buffer
+        (insert-file-contents file)
+	(org-export-to-buffer 'html "*auto-org-export*" '() '() '() t)
+	(goto-char (point-max))
+	(insert "<div id=\"htmx-target\"></div>")
+	(buffer-string)))
 
 (defun eos-404 (request)
   "Serve a 404 page"
   (with-slots (process headers) request
     (ws-response-header process 404 '("Content-type" . "text/plain"))
-    (process-send-string (process request) "404. Request a .org file")))
+    (process-send-string (process request) "404. Request a file on the machine")))
 
 (defun eos-run ()
   "Run the elisp org server (name not final)"
