@@ -7,6 +7,8 @@ Download the Emacs Lisp [[https://elpa.gnu.org/packages/web-server.html][webserv
 Set the variables ~eos-home-dir~ to the directory from which you want to run the server and ~eos-index-file~ as the file you want to use as the default server page, then run ~(eos-run)~ using M-: or similar.
 
 You can also use [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Batch-Mode.html][Emacs in batch mode]] to run it without having to wrangle output buffers.
+
+Open http://localhost:9000/your-org-index-file.org and voila!
 ** Possible Pain Points
 - .org links aren't highlighted like regular ~<a>~ links. Doesn't bother me (ex-Acme user), but it might bother you.
 
